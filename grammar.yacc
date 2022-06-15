@@ -1,49 +1,31 @@
-%{
+%require "3.2"
+%code top {
+    int yylex (void);
+    void yyerror (char const *);
+}
+%code requires {
     #include <string>
-
-    using namespace std;
-
-    class node {};
-
-    class number_node : public node{
-        public:
-            int number;
-            number_node(int num){
-                number = num;
-            }                 
-    };
-
-    class var_node : public node{
-        public:
-            string var;
-            var_node(string temp_var){
-                var = temp_var;
-            }            
-    };
-
-    int yylex();
-    void yyerror(const char* s);
-
-%}
+    #include "node.h"
+}
 
 %union {
     int num;
-    char *var;
-    node *nodes;
+    char * var;
+    node * expr;
 }
 
 %token <num> NUMBER
 %token <var> VAR
 %left LPAREN RPAREN
-%type <nodes> nodes
+%type <expr> EXPR
 
 %%
-nodes: LPAREN nodes RPAREN  {
+EXPR: LPAREN EXPR RPAREN  {
           $$ = $2; }      
     |   NUMBER {
         $$ = new number_node($1);}
     |   VAR{
-        $$ = new var_node($1);}      
+        $$ = new var_node($1);}
 %%
 
 int main(){

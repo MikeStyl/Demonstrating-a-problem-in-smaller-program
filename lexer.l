@@ -1,11 +1,10 @@
 %{
-#include<iostream>
-#include<fstream>
+#include <iostream>
+#include <fstream>
 #include <string>
-#include "y.tab.h"
+#include "grammar.tab.h"
 
 std::ofstream myfile ("lexer_out.txt");
-
 %}
 
 whitespace          [ \t]+
@@ -18,7 +17,7 @@ closing_Parenthesis ")"
 %%
 {opening_Parenthesis}             {return LPAREN;}
 {closing_Parenthesis}             {return RPAREN;}
-[a-zA-Z]+                         {yylval.var; return VAR;}
+[a-zA-Z]+                         {yylval.var = yytext; return VAR;}
 [0-9]+                            {yylval.num = atof(yytext); return NUMBER;}
 {whitespace}                      {};
 .                                 {std::cout<<yytext<<" unmatched string"<<std::endl;}
@@ -26,13 +25,13 @@ closing_Parenthesis ")"
 
 int yywrap() {return 0;}
 
-int main(int argc, char* argv[]){
-
-    FILE *fp;
-    fp = fopen("test.txt","r");
-    yyin = fp;
-    yylex();
-    fclose(fp);
-    myfile.close();
-    return 0;
-}
+// int main(int argc, char* argv[]){
+//
+//    FILE *fp;
+//    fp = fopen("test.txt","r");
+//    yyin = fp;
+//    yylex();
+//    fclose(fp);
+//    myfile.close();
+//    return 0;
+// }

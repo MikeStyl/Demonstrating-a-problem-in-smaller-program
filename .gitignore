@@ -1,0 +1,4 @@
+grammar.tab.*
+lex.yy.*
+node.o
+output
